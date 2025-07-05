@@ -147,7 +147,7 @@ function updateChartSize() {
     const viewportHeight = window.innerHeight;
     
     // 判断是否为移动端
-    const isMobile = viewportWidth < 1000;
+    const isMobile = (viewportWidth < 1000) && (viewportWidth < viewportHeight);
     
     // 移动端顶部固定距离配置
     const topDistance = 50;
@@ -184,7 +184,7 @@ function updateChartSize() {
          legendConfig = {
              orient: 'horizontal', // 横向排列
              left: '50px', // 左边距
-             bottom: '40%', // 底部对齐
+             bottom: '30%', // 底部对齐
              top: 'auto', // 清除top设置
              itemGap: 30, // 减小间隔
              itemWidth: 30, // 小一些的图例项
@@ -295,6 +295,7 @@ function updateChartSize() {
          option.series[0].emphasis.scaleSize = 5;
          option.series[0].emphasis.label.fontSize = '14';
      }
+     option.graphic[1].style.text = `Total：${window.innerWidth}`;
     
     return option;
 }
@@ -397,7 +398,7 @@ document.addEventListener('DOMContentLoaded', async function() {
               left: '61%', // 与饼图中心位置一致
               top: '53%',  // 副标题略微向下
               style: {
-                  text: `Total：${totalCount}`,
+                  text: `Total：${window.innerWidth}`,
                   textAlign: 'center',
                   textBaseline: 'middle',
                   fill: '#8E8E93',
