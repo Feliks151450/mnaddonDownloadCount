@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts 环形图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #1C1C1E;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+        #donut-chart {
+            width: 100vw;
+            height: 100vh;
+            background-color: #1C1C1E;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            z-index: 10;
+            display: none; /* 隐藏顶部标题，因为信息已经显示在饼图中心 */
+        }
+        .chart-title h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 500;
+            color: #FFFFFF;
+            line-height: 1.2;
+        }
+        .chart-title .total {
+            margin: 8px 0 0 0;
+            font-size: 16px;
+            color: #8E8E93;
+            font-weight: 400;
+        }
+        
+        /* 移动端优化 */
+        @media screen and (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            #donut-chart {
+                /* 确保在移动端有足够的空间 */
+                min-height: 100vh;
+            }
+            
+            .chart-title {
+                left: 20px;
+                top: 20px;
+            }
+            
+            .chart-title h1 {
+                font-size: 20px;
+            }
+            
+            .chart-title .total {
+                font-size: 14px;
+            }
+        }
+        
+        /* 超小屏幕优化 */
+        @media screen and (max-width: 480px) {
+            body {
+                font-size: 12px;
+            }
+            
+            .chart-title h1 {
+                font-size: 18px;
+            }
+            
+            .chart-title .total {
+                font-size: 12px;
+            }
+        }
+        
+        /* 横屏模式优化 */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            #donut-chart {
+                /* 横屏时调整布局 */
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-title">
+        <h1>MN Addon</h1>
+        <div class="total">总计：386</div>
+    </div>
+    <div id="donut-chart"></div>
+
+    <script>
+    function getCountString(count) {
+      return `| ${count}`
+    }
+// 假设这是从后端获取的 JSON 数据
+let totalCount = 0;
+let jsonData = {}
+const modelNameMap = {
+  "mnchatglm": "MN ChatAI",
+  "mnocr": "MN OCR",
+  "mnsnipaste": "MN Snipaste",
+  "mnautostyle": "MN AutoStyle",
+  "mntoolbar": "MN Toolbar",
+  "mnutils": "MN Utils",
+  "mnbrowser": "MN Browser",
+  "ohmymn": "Ohmymn",
+  "mneditor": "MN Editor",
+  "GoToPage": "GoToPage",
+  "mdxdictcollins": "MDX Dict Collins",
+  "mdxdictoxford": "MDX Dict Oxford",
+  "mnbigbang": "MN BigBang",
+  "mnnetwork": "MN Network",
+  "mnutils": "MN Utils",
+  "mnexcalidraw": "MN Excalidraw",
+  "mntimer": "MN Timer",
+  "mnnetwork": "MN Network",
+  "deepl": "DeepL",
+  "searchineudic": "Search in Eudic",
+  "instantcopy": "Instant Copy",
+  "flomo": "Flomo"
+}
+
+
+
+
+// 将统计结果转换为 ECharts 饼图所需的数据格式
+let chartData = []
+
+
+
+
+
+// 2. ECharts 配置项
+let option = {} 
+
+// 创建一个函数来动态调整饼图大小
+function updateChartSize() {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // 判断是否为移动端
+    const isMobile = viewportWidth < 700;
+    
+    // 移动端顶部固定距离配置
+    const topDistance = 50;
+    
+    // 根据视口大小动态计算半径，设置最大限制
+    let maxOuterRadius, maxInnerRadius, centerPosition, legendConfig, finalCenterY;
+    
+    if (isMobile) {
+        // 移动端布局
+        maxOuterRadius = Math.min(
+            viewportWidth * 0.35,  // 移动端稍微小一些
+            viewportHeight * 0.3,  // 为下方图例留出空间
+            350  // 移动端最大半径
+        );
+        maxInnerRadius = Math.min(
+            viewportWidth * 0.2,
+            viewportHeight * 0.15,
+            250
+        );
+        maxOuterRadius = maxInnerRadius+65
+        // if (maxOuterRadius > 200) {
+        //   maxOuterRadius = 200;
+        // }
+        
+        
+        if (viewportWidth < 500) {
+          maxOuterRadius = maxInnerRadius+15+viewportWidth*0.1
+        }
+        
+        
+                 // 计算固定距离顶部的位置（饼图边缘距离顶部固定距离）
+         const centerY = topDistance + maxOuterRadius;
+         // 安全检查：确保饼图不会太靠下，避免与图例重叠
+         const maxCenterY = viewportHeight * 0.45; // 最大不超过屏幕高度的45%
+         finalCenterY = Math.min(centerY, maxCenterY);
+         centerPosition = ['50%', finalCenterY + 'px']; // 饼图距离顶部固定距离
+        
+                 // 移动端图例配置
+         legendConfig = {
+             orient: 'horizontal', // 横向排列
+             left: '50px', // 左边距
+             bottom: '25%', // 底部对齐
+             top: 'auto', // 清除top设置
+             itemGap: 15, // 减小间隔
+             itemWidth: 25, // 小一些的图例项
+             itemHeight: 13,
+            icon: 'circle',
+            textStyle: {
+                color: '#FFFFFF',
+                fontSize: 15, // 移动端字体小一些
+                fontWeight: 400
+            },
+            data: chartData.map(item => item.name), // 使用处理后的数据中的模型名称作为图例
+            // 移动端图例换行配置
+            formatter: function(name) {
+                // 找到对应的数据项获取下载次数
+                const dataItem = chartData.find(item => item.name === name);
+                const displayName = modelNameMap[name] || name;
+                const count = dataItem ? dataItem.value : 0;
+                return `${displayName}`;
+            }
+        };
+    } else {
+        // 桌面端布局
+        maxOuterRadius = Math.min(
+            viewportWidth * 0.27,
+            viewportHeight * 0.35,
+            250
+        );
+        
+        
+        maxInnerRadius = Math.min(
+            viewportWidth * 0.18,
+            viewportHeight * 0.18,
+            200
+        );
+        
+        centerPosition = ['65%', '50%']; // 桌面端右移
+        
+        // 桌面端图例配置
+        legendConfig = {
+            orient: 'vertical', // 垂直排列
+            left: '10px', // 左对齐
+            top: 'middle', // 垂直居中
+            bottom: 'auto', // 清除bottom设置
+            itemGap: 12,
+            itemWidth: 20,
+            itemHeight: 10,
+            icon: 'circle',
+            textStyle: {
+                color: '#FFFFFF',
+                fontSize: 14,
+                fontWeight: 400
+            },
+            data: chartData.map(item => item.name), // 使用处理后的数据中的模型名称作为图例
+            formatter: function(name) {
+                // 找到对应的数据项获取下载次数
+                const dataItem = chartData.find(item => item.name === name);
+                const displayName = modelNameMap[name] || name;
+                const count = dataItem ? dataItem.value : 0;
+                return `${displayName}`;
+            }
+        };
+    }
+    
+    // 更新配置
+    option.series[0].radius = [maxInnerRadius, maxOuterRadius];
+    option.series[0].center = centerPosition;
+    option.legend = legendConfig;
+    
+    // 根据屏幕尺寸调整标签样式
+    option.series[0].label.fontSize = isMobile ? 10 : 12;
+    option.series[0].labelLine.length = isMobile ? 10 : 15;
+    option.series[0].labelLine.length2 = isMobile ? 5 : 8;
+    
+    // 更新中心文字位置和大小
+    const titleFontSize = Math.min(24, viewportWidth * 0.04);
+    const subtitleFontSize = Math.min(16, viewportWidth * 0.025);
+    
+     if (isMobile) {
+         // 移动端：文字位置相对于饼图中心的像素位置
+         option.graphic[0].left = '41%';
+         const titleY = finalCenterY - 25; // 主标题略微上移
+         option.graphic[0].top = titleY + 'px';
+     } else {
+        let left = `${viewportWidth*0.65-60}px`
+         option.graphic[0].left = left;
+         option.graphic[0].top = '47%'; // 桌面端保持百分比
+     }
+     option.graphic[0].style.fontSize = titleFontSize;
+     
+     if (isMobile) {
+         // 移动端：文字位置相对于饼图中心的像素位置
+        option.graphic[1].left = '44%';
+         const subtitleY = finalCenterY + 25; // 副标题略微下移
+         option.graphic[1].top = subtitleY + 'px';
+     } else {
+        let left = `${viewportWidth*0.65-45}px`
+        option.graphic[1].left = left;
+        option.graphic[1].top = '55%'; // 桌面端保持百分比
+     }
+     option.graphic[1].style.fontSize = subtitleFontSize;
+    
+    return option;
+}
+
+function getChatData(jsonData) {
+  // 1. 数据预处理：统计每个 model_name 的总 count
+    const modelCounts = {};
+
+    jsonData.data.forEach(item => {
+        const modelName = item.model_name;
+        const count = item.count;
+        if (modelCounts[modelName]) {
+            modelCounts[modelName] += count;
+        } else {
+            modelCounts[modelName] = count;
+        }
+        totalCount += count;
+    });
+    chartData = Object.keys(modelCounts).map(modelName => {
+        return {
+            name: modelName,
+            value: modelCounts[modelName]
+        };
+    });
+    // 对数据进行排序，让最大的部分在前，和图片保持一致（可选）
+    chartData.sort((a, b) => b.value - a.value);
+
+    // 为前10个数据项设置标签和引导线显示
+    chartData.forEach((item, index) => {
+        if (index < 10) {
+            // 前10个显示标签和引导线
+            item.label = {
+                show: true,
+                formatter:  (modelNameMap[item.name] || item.name) + ' ' + getCountString(item.value)
+            };
+            item.labelLine = {
+                show: true
+            };
+        }
+    });
+    return chartData
+}
+document.addEventListener('DOMContentLoaded', async function() {
+
+    // 使用 fetch API 获取 JSON 数据
+    let response = await fetch('https://vip.123pan.cn/1836303614/dl/cdn/count.json')
+    jsonData = await response.json()
+    
+    // 1. 数据预处理：统计每个 model_name 的总 count
+    const modelCounts = {};
+
+    chartData = getChatData(jsonData)
+
+    option = {
+      // 设置背景色为深色，与原图风格匹配
+      backgroundColor: '#1C1C1E', // 深灰色背景
+
+      // 提示框
+      tooltip: {
+          trigger: 'item',
+          formatter: function(params) {
+              // 使用 modelNameMap 映射显示名称
+              const displayName = modelNameMap[params.name] || params.name;
+              return `${displayName}: ${params.value} (${params.percent}%)`;
+          },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)', // 深色半透明背景
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderWidth: 1,
+          borderRadius: 6,
+          textStyle: {
+              color: '#FFFFFF',
+              fontSize: 13,
+              fontWeight: 500
+          }
+      },
+
+      // 图形组件 - 在饼图中心添加文字
+      graphic: [
+          {
+              type: 'text',
+              left: '60%', // 与饼图中心位置一致
+              top: '47%',  // 主标题略微向上
+              style: {
+                  text: 'MN Addon',
+                  textAlign: 'center',
+                  textBaseline: 'middle',
+                  fill: '#FFFFFF',
+                  fontSize: 24,
+                  fontWeight: '600',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif'
+              }
+          },
+          {
+              type: 'text',
+              left: '61%', // 与饼图中心位置一致
+              top: '53%',  // 副标题略微向下
+              style: {
+                  text: `Total：${totalCount}`,
+                  textAlign: 'center',
+                  textBaseline: 'middle',
+                  fill: '#8E8E93',
+                  fontSize: 16,
+                  fontWeight: '400',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif'
+              }
+          }
+      ],
+
+      // 系列（图表类型）
+      series: [
+          {
+              name: '模型调用次数',
+              type: 'pie', // 饼图
+              // 控制饼图最大显示大小 - 使用固定像素值和百分比的组合
+              radius: [
+                  Math.min(window.innerWidth * 0.15, 120), // 内半径：最大120px
+                  Math.min(window.innerWidth * 0.25, 200)  // 外半径：最大200px
+              ],
+              center: ['65%', '50%'], // 圆心位置，向右偏移
+              avoidLabelOverlap: false, // 避免标签重叠
+
+              // 标签（显示在扇形旁边的文字）
+              label: {
+                  show: false, // 默认不显示标签，通过数据项单独控制
+                  position: 'outside', // 标签位置在扇形外侧
+                  fontSize: 12,
+                  fontWeight: '500',
+                  color: '#aaaaaa'
+              },
+              // 标签引导线
+              labelLine: {
+                  show: false, // 默认不显示引导线，通过数据项单独控制
+                  length: 10,
+                  length2: 8,
+                  lineStyle: {
+                      color: '#aaaaaa',
+                      width: 1
+                  }
+              },
+              // 强调样式（鼠标悬浮时）
+              emphasis: {
+                  label: {
+                      show: true, // 鼠标悬浮时显示标签
+                      fontSize: '14',
+                      fontWeight: '500',
+                      color: '#FFFFFF' // 悬浮时标签颜色
+                  },
+                  labelLine: {
+                      show: true, // 鼠标悬浮时显示引导线
+                      length: 15,
+                      length2: 8,
+                      lineStyle: {
+                          color: '#FFFFFF',
+                          width: 1
+                      }
+                  },
+                  scaleSize: 5 // 悬浮时轻微放大
+              },
+              data: chartData, // 实际的图表数据
+
+              // 颜色配置，根据图片优化
+              color: [
+                  '#00BFFF', // mnchatglm (亮蓝色)
+                  '#32CD32', // mnocr (绿色)
+                  '#20B2AA', // mnsnipaste (青绿色)
+                  '#E6E6FA', // mnautostyle (淡紫色)
+                  '#4169E1', // mntoolbar (皇家蓝)
+                  '#FF8C00', // mnutils (深橙色)
+                  '#FFD700', // mnbrowser (金黄色)
+                  '#FF6347', // ohmymn (番茄红)
+                  '#DA70D6', // mneditor (兰花紫)
+                  '#8A2BE2', // 其他颜色
+                  '#FF1493',
+                  '#00CED1',
+                  '#FF69B4',
+                  '#98FB98',
+                  '#F0E68C',
+                  '#DDA0DD',
+                  '#87CEEB',
+                  '#F4A460',
+                  '#40E0D0',
+                  '#EE82EE'
+              ],
+               // 扇形之间的间隔
+              itemStyle: {
+                  borderColor: '#1C1C1E', // 与背景色一致，制造间隔效果
+                  borderWidth: 3,
+                  borderRadius: 15 // 增加圆角半径，使圆角效果更明显
+              }
+          }
+      ]
+    };
+// 3. 初始化 ECharts 实例并应用配置
+    const chartDom = document.getElementById('donut-chart');
+    if (chartDom) {
+        const myChart = echarts.init(chartDom, 'dark'); // 使用 'dark' 主题
+        
+        // 设置初始配置
+        myChart.setOption(updateChartSize());
+
+        // 可选：添加窗口大小改变时的自适应
+        window.addEventListener('resize', function() {
+            myChart.setOption(updateChartSize());
+            myChart.resize();
+        });
+    }
+});
+    </script>
+</body>
+</html>
