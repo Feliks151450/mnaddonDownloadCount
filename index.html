@@ -293,7 +293,7 @@ function updateChartSize() {
          option.series[0].emphasis.scaleSize = 10;
          option.series[0].emphasis.label.fontSize = '20';
      }
-     option.graphic[1].style.text = `Total：${window.innerWidth}`;
+     option.graphic[1].style.text = `Total：${totalCount}`;
     
     return option;
 }
@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', async function() {
               left: '61%', // 与饼图中心位置一致
               top: '53%',  // 副标题略微向下
               style: {
-                  text: `Total：${window.innerWidth}`,
+                  text: `Total：${totalCount}`,
                   textAlign: 'center',
                   textBaseline: 'middle',
                   fill: '#8E8E93',
