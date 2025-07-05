@@ -284,6 +284,8 @@ function updateChartSize() {
          option.tooltip.borderRadius = 20;
          option.series[0].emphasis.scaleSize = 20;
          option.series[0].emphasis.label.fontSize = '40';
+         option.series[0].itemStyle.borderWidth = 7
+         option.series[0].itemStyle.borderRadius = 25
      } else {
         let left = `${viewportWidth*0.60-55}px`
         option.graphic[1].left = left;
@@ -293,6 +295,8 @@ function updateChartSize() {
         option.tooltip.borderRadius = 6;
          option.series[0].emphasis.scaleSize = 10;
          option.series[0].emphasis.label.fontSize = '20';
+         option.series[0].itemStyle.borderWidth = 3
+         option.series[0].itemStyle.borderRadius = 15
      }
      option.graphic[1].style.text = `Total：${totalCount}`;
     
