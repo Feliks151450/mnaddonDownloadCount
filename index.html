@@ -160,7 +160,7 @@ function updateChartSize() {
         maxInnerRadius = Math.min(
             viewportWidth * 0.25,
             viewportHeight * 0.25,
-            700
+            800
         );
         maxOuterRadius = maxInnerRadius+100
         // if (maxOuterRadius > 200) {
@@ -186,13 +186,13 @@ function updateChartSize() {
              left: '50px', // 左边距
              bottom: '25%', // 底部对齐
              top: 'auto', // 清除top设置
-             itemGap: 15, // 减小间隔
-             itemWidth: 25, // 小一些的图例项
-             itemHeight: 13,
+             itemGap: 30, // 减小间隔
+             itemWidth: 30, // 小一些的图例项
+             itemHeight: 20,
             icon: 'circle',
             textStyle: {
                 color: '#FFFFFF',
-                fontSize: 15, // 移动端字体小一些
+                fontSize: 25, // 移动端字体小一些
                 fontWeight: 400
             },
             data: chartData.map(item => item.name), // 使用处理后的数据中的模型名称作为图例
@@ -254,9 +254,9 @@ function updateChartSize() {
     option.legend = legendConfig;
     
     // 根据屏幕尺寸调整标签样式
-    option.series[0].label.fontSize = isMobile ? 10 : 12;
-    option.series[0].labelLine.length = isMobile ? 10 : 15;
-    option.series[0].labelLine.length2 = isMobile ? 5 : 8;
+    option.series[0].label.fontSize = isMobile ? 25 : 12;
+    option.series[0].labelLine.length = isMobile ? 20 : 15;
+    option.series[0].labelLine.length2 = isMobile ? 15 : 8;
     
     // 更新中心文字位置和大小
     const titleFontSize = Math.min(24, viewportWidth * 0.04);
@@ -264,27 +264,37 @@ function updateChartSize() {
     
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
-         option.graphic[0].left = '41%';
-         const titleY = finalCenterY - 25; // 主标题略微上移
+        option.graphic[0].style.fontSize = 50;
+         option.graphic[0].left = '37%';
+         const titleY = finalCenterY - 40; // 主标题略微上移
          option.graphic[0].top = titleY + 'px';
      } else {
         let left = `${viewportWidth*0.65-60}px`
          option.graphic[0].left = left;
          option.graphic[0].top = '47%'; // 桌面端保持百分比
+        option.graphic[0].style.fontSize = titleFontSize;
      }
-     option.graphic[0].style.fontSize = titleFontSize;
      
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
-        option.graphic[1].left = '44%';
-         const subtitleY = finalCenterY + 25; // 副标题略微下移
+        option.graphic[1].left = '40%';
+         const subtitleY = finalCenterY + 40; // 副标题略微下移
          option.graphic[1].top = subtitleY + 'px';
+         option.graphic[1].style.fontSize = 40;
+         option.tooltip.textStyle.fontSize = 40;
+         option.tooltip.borderRadius = 20;
+         option.series[0].emphasis.scaleSize = 20;
+         option.series[0].emphasis.label.fontSize = '40';
      } else {
         let left = `${viewportWidth*0.65-45}px`
         option.graphic[1].left = left;
         option.graphic[1].top = '55%'; // 桌面端保持百分比
+        option.graphic[1].style.fontSize = subtitleFontSize;
+        option.tooltip.textStyle.fontSize = 13;
+        option.tooltip.borderRadius = 6;
+         option.series[0].emphasis.scaleSize = 5;
+         option.series[0].emphasis.label.fontSize = '14';
      }
-     option.graphic[1].style.fontSize = subtitleFontSize;
     
     return option;
 }
