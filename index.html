@@ -216,9 +216,9 @@ function updateChartSize() {
         );
         
         maxOuterRadius = maxInnerRadius+70
-        
 
-        centerPosition = ['65%', '50%']; // 桌面端右移
+
+        centerPosition = ['60%', '50%']; // 桌面端右移
         
         // 桌面端图例配置
         legendConfig = {
@@ -252,7 +252,7 @@ function updateChartSize() {
     option.legend = legendConfig;
     
     // 根据屏幕尺寸调整标签样式
-    option.series[0].label.fontSize = isMobile ? 25 : 12;
+    option.series[0].label.fontSize = isMobile ? 25 : 17;
     option.series[0].labelLine.length = isMobile ? 20 : 15;
     option.series[0].labelLine.length2 = isMobile ? 15 : 8;
     
@@ -267,7 +267,7 @@ function updateChartSize() {
          const titleY = finalCenterY - 40; // 主标题略微上移
          option.graphic[0].top = titleY + 'px';
      } else {
-        let left = `${viewportWidth*0.65-60}px`
+        let left = `${viewportWidth*0.60-70}px`
          option.graphic[0].left = left;
          option.graphic[0].top = '47%'; // 桌面端保持百分比
         option.graphic[0].style.fontSize = titleFontSize;
@@ -284,14 +284,14 @@ function updateChartSize() {
          option.series[0].emphasis.scaleSize = 20;
          option.series[0].emphasis.label.fontSize = '40';
      } else {
-        let left = `${viewportWidth*0.65-45}px`
+        let left = `${viewportWidth*0.60-55}px`
         option.graphic[1].left = left;
         option.graphic[1].top = '55%'; // 桌面端保持百分比
         option.graphic[1].style.fontSize = subtitleFontSize;
-        option.tooltip.textStyle.fontSize = 13;
+        option.tooltip.textStyle.fontSize = 20;
         option.tooltip.borderRadius = 6;
          option.series[0].emphasis.scaleSize = 10;
-         option.series[0].emphasis.label.fontSize = '14';
+         option.series[0].emphasis.label.fontSize = '20';
      }
      option.graphic[1].style.text = `Total：${window.innerWidth}`;
     
