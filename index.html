@@ -207,19 +207,17 @@ function updateChartSize() {
         };
     } else {
         // 桌面端布局
-        maxOuterRadius = Math.min(
-            viewportWidth * 0.27,
-            viewportHeight * 0.35,
-            250
-        );
         
         
         maxInnerRadius = Math.min(
             viewportWidth * 0.18,
-            viewportHeight * 0.18,
+            viewportHeight * 0.25,
             200
         );
         
+        maxOuterRadius = maxInnerRadius+70
+        
+
         centerPosition = ['65%', '50%']; // 桌面端右移
         
         // 桌面端图例配置
@@ -259,8 +257,8 @@ function updateChartSize() {
     option.series[0].labelLine.length2 = isMobile ? 15 : 8;
     
     // 更新中心文字位置和大小
-    const titleFontSize = Math.min(24, viewportWidth * 0.04);
-    const subtitleFontSize = Math.min(16, viewportWidth * 0.025);
+    const titleFontSize = Math.min(30, viewportWidth * 0.1);
+    const subtitleFontSize = Math.min(20, viewportWidth * 0.025);
     
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
@@ -292,7 +290,7 @@ function updateChartSize() {
         option.graphic[1].style.fontSize = subtitleFontSize;
         option.tooltip.textStyle.fontSize = 13;
         option.tooltip.borderRadius = 6;
-         option.series[0].emphasis.scaleSize = 5;
+         option.series[0].emphasis.scaleSize = 10;
          option.series[0].emphasis.label.fontSize = '14';
      }
      option.graphic[1].style.text = `Total：${window.innerWidth}`;
