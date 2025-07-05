@@ -157,17 +157,12 @@ function updateChartSize() {
     
     if (isMobile) {
         // 移动端布局
-        maxOuterRadius = Math.min(
-            viewportWidth * 0.35,  // 移动端稍微小一些
-            viewportHeight * 0.3,  // 为下方图例留出空间
-            350  // 移动端最大半径
-        );
         maxInnerRadius = Math.min(
-            viewportWidth * 0.2,
-            viewportHeight * 0.15,
-            250
+            viewportWidth * 0.25,
+            viewportHeight * 0.25,
+            700
         );
-        maxOuterRadius = maxInnerRadius+65
+        maxOuterRadius = maxInnerRadius+100
         // if (maxOuterRadius > 200) {
         //   maxOuterRadius = 200;
         // }
