@@ -178,13 +178,13 @@ function updateChartSize() {
          // 安全检查：确保饼图不会太靠下，避免与图例重叠
          const maxCenterY = viewportHeight * 0.45; // 最大不超过屏幕高度的45%
          finalCenterY = Math.min(centerY, maxCenterY);
-         centerPosition = ['50%', finalCenterY + 'px']; // 饼图距离顶部固定距离
+         centerPosition = ['40%', finalCenterY + 'px']; // 饼图距离顶部固定距离
         
                  // 移动端图例配置
          legendConfig = {
              orient: 'horizontal', // 横向排列
              left: '50px', // 左边距
-             bottom: '25%', // 底部对齐
+             bottom: '40%', // 底部对齐
              top: 'auto', // 清除top设置
              itemGap: 30, // 减小间隔
              itemWidth: 30, // 小一些的图例项
@@ -265,7 +265,7 @@ function updateChartSize() {
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
         option.graphic[0].style.fontSize = 50;
-         option.graphic[0].left = '37%';
+         option.graphic[0].left = '28%';
          const titleY = finalCenterY - 40; // 主标题略微上移
          option.graphic[0].top = titleY + 'px';
      } else {
@@ -277,7 +277,7 @@ function updateChartSize() {
      
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
-        option.graphic[1].left = '40%';
+        option.graphic[1].left = '30%';
          const subtitleY = finalCenterY + 40; // 副标题略微下移
          option.graphic[1].top = subtitleY + 'px';
          option.graphic[1].style.fontSize = 40;
@@ -321,10 +321,15 @@ function getChatData(jsonData) {
     });
     // 对数据进行排序，让最大的部分在前，和图片保持一致（可选）
     chartData.sort((a, b) => b.value - a.value);
+    let counts = chartData.map(item => item.value)
+    let countsTotalBefore = chartData.map((item,index)=>Math.round(counts.slice(0,index+1).reduce((a, b) => a + b, 0)))
+    let firstIndexLargerHalf = countsTotalBefore.findIndex(item => item > totalCount/2)
+    
+    
 
     // 为前10个数据项设置标签和引导线显示
     chartData.forEach((item, index) => {
-        if (index < 10) {
+        if (index <= firstIndexLargerHalf) {
             // 前10个显示标签和引导线
             item.label = {
                 show: true,
