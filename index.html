@@ -185,15 +185,15 @@ function updateChartSize() {
          legendConfig = {
              orient: 'horizontal', // 横向排列
              left: '50px', // 左边距
-             bottom: '20%', // 底部对齐
+             bottom: '1%', // 底部对齐
              top: 'auto', // 清除top设置
-             itemGap: 30, // 减小间隔
+             itemGap: 20, // 减小间隔
              itemWidth: 30, // 小一些的图例项
-             itemHeight: 20,
+             itemHeight: 15,
             icon: 'circle',
             textStyle: {
                 color: '#FFFFFF',
-                fontSize: 25, // 移动端字体小一些
+                fontSize: '1rem', // 移动端字体小一些
                 fontWeight: 400
             },
             data: chartData.map(item => item.name), // 使用处理后的数据中的模型名称作为图例
@@ -229,11 +229,11 @@ function updateChartSize() {
             bottom: 'auto', // 清除bottom设置
             itemGap: 12,
             itemWidth: 20,
-            itemHeight: 10,
+            itemHeight: 15,
             icon: 'circle',
             textStyle: {
                 color: '#FFFFFF',
-                fontSize: 14,
+                fontSize: '1rem',
                 fontWeight: 400
             },
             data: chartData.map(item => item.name), // 使用处理后的数据中的模型名称作为图例
@@ -253,7 +253,7 @@ function updateChartSize() {
     option.legend = legendConfig;
     
     // 根据屏幕尺寸调整标签样式
-    option.series[0].label.fontSize = isMobile ? 25 : 17;
+    option.series[0].label.fontSize = "1.5em";
     option.series[0].labelLine.length = isMobile ? 20 : 15;
     option.series[0].labelLine.length2 = isMobile ? 15 : 8;
     
@@ -263,7 +263,7 @@ function updateChartSize() {
     
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
-        option.graphic[0].style.fontSize = 50;
+        option.graphic[0].style.fontSize = '2.5em';
          option.graphic[0].left = '28%';
          const titleY = finalCenterY - 40; // 主标题略微上移
          option.graphic[0].top = titleY + 'px';
@@ -279,11 +279,11 @@ function updateChartSize() {
         option.graphic[1].left = '30%';
          const subtitleY = finalCenterY + 40; // 副标题略微下移
          option.graphic[1].top = subtitleY + 'px';
-         option.graphic[1].style.fontSize = 40;
-         option.tooltip.textStyle.fontSize = 40;
+         option.graphic[1].style.fontSize = '2em';
+         option.tooltip.textStyle.fontSize = 30;
          option.tooltip.borderRadius = 20;
          option.series[0].emphasis.scaleSize = 20;
-         option.series[0].emphasis.label.fontSize = '40';
+         option.series[0].emphasis.label.fontSize = '2rem';
          option.series[0].itemStyle.borderWidth = 7
          option.series[0].itemStyle.borderRadius = 25
      } else {
