@@ -219,7 +219,7 @@ function updateChartSize() {
         maxOuterRadius = maxInnerRadius+70
 
 
-        centerPosition = ['60%', '50%']; // 桌面端右移
+        centerPosition = ['50%', '50%']; // 桌面端右移
         
         // 桌面端图例配置
         legendConfig = {
@@ -268,7 +268,7 @@ function updateChartSize() {
          const titleY = finalCenterY - 40; // 主标题略微上移
          option.graphic[0].top = titleY + 'px';
      } else {
-        let left = `${viewportWidth*0.60-70}px`
+        let left = `${viewportWidth*0.50-70}px`
          option.graphic[0].left = left;
          option.graphic[0].top = '47%'; // 桌面端保持百分比
         option.graphic[0].style.fontSize = titleFontSize;
@@ -287,14 +287,14 @@ function updateChartSize() {
          option.series[0].itemStyle.borderWidth = 7
          option.series[0].itemStyle.borderRadius = 25
      } else {
-        let left = `${viewportWidth*0.60-55}px`
+        let left = `${viewportWidth*0.50-55}px`
         option.graphic[1].left = left;
         option.graphic[1].top = '55%'; // 桌面端保持百分比
         option.graphic[1].style.fontSize = subtitleFontSize;
         option.tooltip.textStyle.fontSize = 20;
         option.tooltip.borderRadius = 6;
          option.series[0].emphasis.scaleSize = 10;
-         option.series[0].emphasis.label.fontSize = '20';
+         option.series[0].emphasis.label.fontSize = '2rem';
          option.series[0].itemStyle.borderWidth = 3
          option.series[0].itemStyle.borderRadius = 15
      }
