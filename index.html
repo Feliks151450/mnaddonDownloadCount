@@ -115,8 +115,8 @@ const modelNameMap = {
   "ohmymn": "Ohmymn",
   "mneditor": "MN Editor",
   "GoToPage": "GoToPage",
-  "mdxdictcollins": "MDX Dict Collins",
-  "mdxdictoxford": "MDX Dict Oxford",
+  "mdxdictcollins": "MDXDict Collins",
+  "mdxdictoxford": "MDXDict Oxford",
   "mnbigbang": "MN BigBang",
   "mnnetwork": "MN Network",
   "mnutils": "MN Utils",
@@ -187,13 +187,13 @@ function updateChartSize() {
              left: '50px', // 左边距
              bottom: '1%', // 底部对齐
              top: 'auto', // 清除top设置
-             itemGap: 20, // 减小间隔
-             itemWidth: 30, // 小一些的图例项
+             itemGap: 50, // 减小间隔
+             itemWidth: 15, // 小一些的图例项
              itemHeight: 15,
             icon: 'circle',
             textStyle: {
                 color: '#FFFFFF',
-                fontSize: '1rem', // 移动端字体小一些
+                fontSize: '1em', // 移动端字体小一些
                 fontWeight: 400
             },
             data: chartData.map(item => item.name), // 使用处理后的数据中的模型名称作为图例
@@ -264,7 +264,7 @@ function updateChartSize() {
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
         option.graphic[0].style.fontSize = '2.5em';
-         option.graphic[0].left = '28%';
+         option.graphic[0].left = '34%';
          const titleY = finalCenterY - 40; // 主标题略微上移
          option.graphic[0].top = titleY + 'px';
      } else {
@@ -276,7 +276,7 @@ function updateChartSize() {
      
      if (isMobile) {
          // 移动端：文字位置相对于饼图中心的像素位置
-        option.graphic[1].left = '30%';
+        option.graphic[1].left = '35%';
          const subtitleY = finalCenterY + 40; // 副标题略微下移
          option.graphic[1].top = subtitleY + 'px';
          option.graphic[1].style.fontSize = '2em';
